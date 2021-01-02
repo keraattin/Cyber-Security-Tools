@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request, abort
 from flask_restful import Resource, Api
 import scapy.all as scapy
+from marshmallow import Schema, fields
 
 
 # Gloabal Variables
@@ -8,7 +9,6 @@ import scapy.all as scapy
 BRDCST_MAC = "ff:ff:ff:ff:ff:ff"                  # Broadcast MAC Address
 ANSWRD_LST_INDEX = 0                              # Answered Packages Index
 ARP_FRAME_INDEX = 1                               # Arp Frame Index
-TARGET = "10.0.2.1/24"                            # Target IP Address
 TIMEOUT = 1                                       # Timeout
 
 app = Flask(__name__)
@@ -18,8 +18,11 @@ api = Api(app)
 
 class ArpScan(Resource):
     def get(self):
+        args = request.args                           # Arguments
+        target = args['target']                       # Targets
+
         arp_request = scapy.ARP()                     # ARP Package Generated
-        arp_request.pdst = TARGET                     # Set Target IP Address
+        arp_request.pdst = target                     # Set Target IP Address
 
         broadcast_ether = scapy.Ether()               # Ethernet Frame Generated 
         broadcast_ether.dst = BRDCST_MAC              # Set Destination MAC
