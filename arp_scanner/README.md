@@ -19,6 +19,16 @@ This program allows you to find devices on your network or just find MAC address
 wget http://localhost:5000/arp_scan?target=10.0.2.1/24
 ```
 
+## Example Response
+```
+[
+    {
+        "ip_addr": "10.0.2.1",
+        "mac_addr": "aa:bb:cc:dd:ee:ff"
+    }
+]
+```
+
 ## How to Run
 First of all, meet the requirements
 ```
