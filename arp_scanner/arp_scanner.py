@@ -12,6 +12,9 @@ ANSWRD_LST_INDEX = 0                              # Answered Packages Index
 ARP_FRAME_INDEX = 1                               # Arp Frame Index
 TIMEOUT = 1                                       # Timeout
 PARAMS_COUNT = 1                                  # Number of Parameters
+DEBUG = True                                      # Debug Mode
+PORT = 5000                                       # Port Number
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -79,4 +82,4 @@ api.add_resource(ArpScan, '/arp_scan')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=DEBUG,port=PORT)
