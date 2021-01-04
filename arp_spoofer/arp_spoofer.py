@@ -32,6 +32,8 @@ def main():
     # Send Packet to the Router to Say I am the Victim
     spoof_arp(ROUTER_IP,ROUTER_MAC_ADDR,TARGET_IP)
 
+    print("\r" + TARGET_IP + " <---> " + "[YOU]" + " <---> " + ROUTER_IP, end="")
+
 
 if __name__ == '__main__':
     while True:
