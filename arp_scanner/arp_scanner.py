@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 from flask import Flask, request, abort, jsonify
 from flask_restful import Resource, Api, abort
 from werkzeug.exceptions import BadRequest
@@ -35,14 +38,47 @@ PARAMS_NOT_SEND_MSG = ("Parameters not sent correctly..."
 
 
 # Validate Target IP Address
+##############################################################################
 def validate_target(target):
     matches = re.search(IP_PATTERN,target)
     if matches:
         return True
     else:
         return False
+##############################################################################
 
 
+# Arp Scan Function
+# This Method Takes Target as Argument
+# And It Returns List of Clients
+##############################################################################
+def arp_scan(target):
+    arp_request = scapy.ARP()                     # ARP Package Generated
+    arp_request.pdst = target                     # Set Target IP Address
+
+    broadcast_ether = scapy.Ether()               # Ethernet Frame Generated 
+    broadcast_ether.dst = BRDCST_MAC              # Set Destination MAC
+
+    # Arp and Broadcast Ether Package Combined
+    broadcast_arp_request = broadcast_ether/arp_request
+
+    # Sending Packages
+    answered_list = scapy.srp(broadcast_arp_request,
+        timeout=TIMEOUT, verbose = False)[ANSWRD_LST_INDEX]
+        
+    clients_list = []                             #List of Clients
+
+    for client in answered_list:
+        client_dict = {"ip_addr":client[ARP_FRAME_INDEX].psrc,
+                        "mac_addr":client[ARP_FRAME_INDEX].hwsrc}
+        clients_list.append(client_dict)
+        
+    return clients_list
+##############################################################################
+
+
+# Api Methods
+##############################################################################
 class ArpScan(Resource):
     def get(self):
         args = request.args                           # Arguments
@@ -55,30 +91,15 @@ class ArpScan(Resource):
         if not validate_target(target):
             raise BadRequest(TARGET_NOT_VALID_MSG)
 
-        arp_request = scapy.ARP()                     # ARP Package Generated
-        arp_request.pdst = target                     # Set Target IP Address
-
-        broadcast_ether = scapy.Ether()               # Ethernet Frame Generated 
-        broadcast_ether.dst = BRDCST_MAC              # Set Destination MAC
-
-        # Arp and Broadcast Ether Package Combined
-        broadcast_arp_request = broadcast_ether/arp_request
-
-        # Sending Packages
-        answered_list = scapy.srp(broadcast_arp_request,
-            timeout=TIMEOUT, verbose = False)[ANSWRD_LST_INDEX]
-        
-        clients_list = []                             #List For Clients
-
-        for client in answered_list:
-            client_dict = {"ip_addr":client[ARP_FRAME_INDEX].psrc,
-                        "mac_addr":client[ARP_FRAME_INDEX].hwsrc}
-            clients_list.append(client_dict)
-        
+        clients_list = arp_scan(target)               # Arp Scan Function
         return clients_list
+##############################################################################
 
 
+# Endpoints
+##############################################################################
 api.add_resource(ArpScan, '/arp_scan')
+##############################################################################
 
 
 if __name__ == '__main__':
