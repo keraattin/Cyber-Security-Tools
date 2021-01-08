@@ -1,4 +1,4 @@
-{% include 'layout.html' %}
+{% extends 'layout.html' %}
 
 {% block body %}
 <div class="container">
@@ -7,27 +7,45 @@
             <span class="input-group-text" id="basic-addon3">Target</span>
         </div>
         <input type="text" class="form-control" id="target" placeholder="10.0.2.1/24">&nbsp;
-        <button type="button" class="btn btn-dark">Search</button>
+        <button type="button" class="btn btn-dark" onclick="arpScan()" id="searchButton">Search</button>
     </div>
     </hr>
-    <table class="table">
+    <table class="table table-hover" id="resultsTable">
         <thead>
           <tr>
+            <th scope="col">#</th>
             <th scope="col">Ip Address</th>
             <th scope="col">MAC Address</th>
           </tr>
-        </thead>
+        </thead id="resultsThead">
         <tbody>
-          <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-          </tr>
         </tbody>
       </table>
 </div>
-
 {% endblock %}
 
-{% block scripts%}
 
+{% block scripts%}
+<script type="text/javascript">
+    function arpScan(){
+        var target = encodeURIComponent($('#target').val());
+        var url = "http://localhost:5000/arp_scan";
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: "target="+target,
+            dataType : 'json',
+            success: function(response) {
+                $("#resultsTable > tr").remove(); //Clear Table
+                var num = 0;
+                for (element in response){
+                    var ip_addr = response[element]["ip_addr"];
+                    var mac_addr = response[element]["mac_addr"];
+                    $('#resultsTable tbody').before('<tr><td>'+num+'</td><td>'+ip_addr+'</td><td>'+mac_addr+'</td></tr>');
+                    num = num + 1; //Increment Index
+                }
+            }
+        });
+    } 
+</script>
 {% endblock %}
