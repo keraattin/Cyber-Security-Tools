@@ -1,0 +1,33 @@
+{% include 'layout.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">Target</span>
+        </div>
+        <input type="text" class="form-control" id="target" placeholder="10.0.2.1/24">&nbsp;
+        <button type="button" class="btn btn-dark">Search</button>
+    </div>
+    </hr>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Ip Address</th>
+            <th scope="col">MAC Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mark</td>
+            <td>Otto</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
+
+{% endblock %}
+
+{% block scripts%}
+
+{% endblock %}

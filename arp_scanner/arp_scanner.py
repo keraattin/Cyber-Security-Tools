@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, render_template
 from flask_restful import Resource, Api, abort
 from werkzeug.exceptions import BadRequest
 import scapy.all as scapy
@@ -93,6 +93,15 @@ class ArpScan(Resource):
 
         clients_list = arp_scan(target)               # Arp Scan Function
         return clients_list
+##############################################################################
+
+
+# Pages
+##############################################################################
+## Homepage
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('home.html')
 ##############################################################################
 
 
