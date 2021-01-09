@@ -29,7 +29,8 @@
 <script type="text/javascript">
     function arpScan(){
         var target = encodeURIComponent($('#target').val());
-        var url = "http://localhost:5000/arp_scan";
+        var port = "{{ port | safe }}";
+        var url = "http://localhost:"+port+"/arp_scan";
         $.ajax({
             url: url,
             type: 'GET',

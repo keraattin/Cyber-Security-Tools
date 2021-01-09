@@ -101,7 +101,7 @@ class ArpScan(Resource):
 ## Homepage
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html')
+    return render_template('home.html', port=PORT)
 ##############################################################################
 
 
