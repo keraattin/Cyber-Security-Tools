@@ -42,7 +42,11 @@
                 for (element in response){
                     var ip_addr = response[element]["ip_addr"];
                     var mac_addr = response[element]["mac_addr"];
-                    $('#resultsTable tbody').before('<tr><td>'+num+'</td><td>'+ip_addr+'</td><td>'+mac_addr+'</td></tr>');
+                    $('#resultsTable tbody')
+                    .append(("<tr></tr>"))
+                    .append($("<td></td>").text(num))
+                    .append($("<td></td>").text(ip_addr))
+                    .append($("<td></td>").text(mac_addr))
                     num = num + 1; //Increment Index
                 }
             }
