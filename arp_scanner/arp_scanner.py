@@ -6,6 +6,7 @@ from flask_restful import Resource, Api, abort
 from werkzeug.exceptions import BadRequest
 import scapy.all as scapy
 import re
+import requests
 
 
 # Gloabal Variables
@@ -17,7 +18,9 @@ TIMEOUT = 1                                       # Timeout
 PARAMS_COUNT = 1                                  # Number of Parameters
 DEBUG = True                                      # Debug Mode
 PORT = 5000                                       # Port Number
-
+OK_STATUS_CODE = 200                              # OK Status Code
+MAC_VEND_URL = "https://api.macvendors.com/"      # Mac Vendor Api URL
+MAC_PARAMS_COUNT = 1                              # Number of Parameters
 
 app = Flask(__name__)
 api = Api(app)
@@ -77,6 +80,25 @@ def arp_scan(target):
 ##############################################################################
 
 
+# Get Vendor Function
+# This Method Takes Mac Address as Argument
+# Returns Vendor of Mac Address
+##############################################################################
+def getVendor(mac_addr):
+    url =  MAC_VEND_URL + str(mac_addr)
+
+    payload={}                                        # Payloads
+    headers = {}                                      # Headers
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    status_code = response.status_code                # Status Code of Request
+
+    if status_code == OK_STATUS_CODE:
+        return response.text
+##############################################################################
+
+
 # Api Methods
 ##############################################################################
 class ArpScan(Resource):
@@ -93,6 +115,19 @@ class ArpScan(Resource):
 
         clients_list = arp_scan(target)               # Arp Scan Function
         return clients_list
+
+
+class Vendor(Resource):
+    def get(self):
+        args = request.args                           # Arguments
+        # Arguments Validation
+        if not args or len(args)>MAC_PARAMS_COUNT:
+            raise BadRequest(PARAMS_NOT_SEND_MSG)
+
+        mac_addr = str(args['mac_addr'])              # Mac Address
+
+        vendor = getVendor(mac_addr)
+        return vendor
 ##############################################################################
 
 
@@ -115,6 +150,7 @@ def page_not_found(e):
 # Endpoints
 ##############################################################################
 api.add_resource(ArpScan, '/arp_scan')
+api.add_resource(Vendor, '/vendor')
 ##############################################################################
 
 
