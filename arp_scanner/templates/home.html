@@ -16,6 +16,7 @@
             <th scope="col">#</th>
             <th scope="col">Ip Address</th>
             <th scope="col">MAC Address</th>
+            <th scope="col">Vendor</th>
           </tr>
         </thead id="resultsThead">
         <tbody>
@@ -25,8 +26,20 @@
 {% endblock %}
 
 
-{% block scripts%}
+{% block scripts %}
 <script type="text/javascript">
+    function getVendor(mac_addr){
+        var port = "{{ port | safe }}";
+        var url = "http://localhost:"+port+"/vendor";
+        return $.ajax({
+            url: url,
+            type: 'GET',
+            data: "mac_addr="+mac_addr,
+            cache: true,
+            timeout: 1000,
+        });
+    } 
+
     function arpScan(){
         var target = encodeURIComponent($('#target').val());
         var port = "{{ port | safe }}";
@@ -42,11 +55,14 @@
                 for (element in response){
                     var ip_addr = response[element]["ip_addr"];
                     var mac_addr = response[element]["mac_addr"];
-                    $('#resultsTable tbody')
-                    .append(("<tr></tr>"))
-                    .append($("<td></td>").text(num))
-                    .append($("<td></td>").text(ip_addr))
-                    .append($("<td></td>").text(mac_addr))
+                    getVendor(mac_addr).then(function(data){
+                        $('#resultsTable tbody')
+                        .append(("<tr></tr>"))
+                        .append($("<td></td>").text(num))
+                        .append($("<td></td>").text(ip_addr))
+                        .append($("<td></td>").text(mac_addr))
+                        .append($("<td></td>").text(data))
+                    });
                     num = num + 1; //Increment Index
                 }
             }

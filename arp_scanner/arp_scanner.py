@@ -19,7 +19,7 @@ PARAMS_COUNT = 1                                  # Number of Parameters
 DEBUG = True                                      # Debug Mode
 PORT = 5000                                       # Port Number
 OK_STATUS_CODE = 200                              # OK Status Code
-MAC_VEND_URL = "https://api.macvendors.com/"      # Mac Vendor Api URL
+MAC_VEND_URL = "http://api.macvendors.com/"       # Mac Vendor Api URL
 MAC_PARAMS_COUNT = 1                              # Number of Parameters
 
 app = Flask(__name__)
@@ -84,18 +84,20 @@ def arp_scan(target):
 # This Method Takes Mac Address as Argument
 # Returns Vendor of Mac Address
 ##############################################################################
-def getVendor(mac_addr):
+def get_vendor(mac_addr):
     url =  MAC_VEND_URL + str(mac_addr)
 
     payload={}                                        # Payloads
     headers = {}                                      # Headers
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+    response = requests.request("GET", url, 
+            headers=headers, data=payload)
 
     status_code = response.status_code                # Status Code of Request
 
     if status_code == OK_STATUS_CODE:
-        return response.text
+        vendor = response.text
+        return str(vendor)
 ##############################################################################
 
 
@@ -126,7 +128,8 @@ class Vendor(Resource):
 
         mac_addr = str(args['mac_addr'])              # Mac Address
 
-        vendor = getVendor(mac_addr)
+        vendor = get_vendor(mac_addr)
+        print(vendor)
         return vendor
 ##############################################################################
 
