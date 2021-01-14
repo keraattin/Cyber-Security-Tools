@@ -18,8 +18,8 @@
             <th scope="col">MAC Address</th>
             <th scope="col">Vendor</th>
           </tr>
-        </thead id="resultsThead">
-        <tbody>
+        </thead>
+        <tbody id="resultsTbody">
         </tbody>
       </table>
 </div>
@@ -36,7 +36,6 @@
             type: 'GET',
             data: "mac_addr="+mac_addr,
             cache: true,
-            timeout: 1000,
         });
     } 
 
@@ -50,19 +49,21 @@
             data: "target="+target,
             dataType : 'json',
             success: function(response) {
-                $("#resultsTable > tr").remove(); //Clear Table
+                $("#resultsTbody").empty(); //Clear Table
                 var num = 0;
                 for (element in response){
                     var ip_addr = response[element]["ip_addr"];
                     var mac_addr = response[element]["mac_addr"];
+                    var vendor = "";
                     getVendor(mac_addr).then(function(data){
-                        $('#resultsTable tbody')
-                        .append(("<tr></tr>"))
-                        .append($("<td></td>").text(num))
-                        .append($("<td></td>").text(ip_addr))
-                        .append($("<td></td>").text(mac_addr))
-                        .append($("<td></td>").text(data))
+                        vendor = String(data);
                     });
+                    $('#resultsTable tbody')
+                    .append(("<tr></tr>"))
+                    .append($("<td></td>").text(num))
+                    .append($("<td></td>").text(ip_addr))
+                    .append($("<td></td>").text(mac_addr))
+                    .append($("<td></td>").text(vendor))
                     num = num + 1; //Increment Index
                 }
             }

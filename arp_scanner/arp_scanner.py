@@ -97,6 +97,7 @@ def get_vendor(mac_addr):
 
     if status_code == OK_STATUS_CODE:
         vendor = response.text
+        print(vendor)
         return str(vendor)
 ##############################################################################
 
@@ -129,7 +130,6 @@ class Vendor(Resource):
         mac_addr = str(args['mac_addr'])              # Mac Address
 
         vendor = get_vendor(mac_addr)
-        print(vendor)
         return vendor
 ##############################################################################
 
