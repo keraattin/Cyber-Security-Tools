@@ -51,6 +51,27 @@ def validate_target(target):
 ##############################################################################
 
 
+# Get Vendor Function
+# This Method Takes Mac Address as Argument
+# Returns Vendor of Mac Address
+##############################################################################
+def get_vendor(mac_addr):
+    url =  MAC_VEND_URL + str(mac_addr)
+
+    payload={}                                        # Payloads
+    headers = {}                                      # Headers
+
+    response = requests.request("GET", url, 
+            headers=headers, data=payload, timeout=TIMEOUT)
+
+    status_code = response.status_code                # Status Code of Request
+
+    if status_code == OK_STATUS_CODE:
+        vendor = response.text
+        return str(vendor)
+##############################################################################
+
+
 # Arp Scan Function
 # This Method Takes Target as Argument
 # And It Returns List of Clients
@@ -69,36 +90,20 @@ def arp_scan(target):
     answered_list = scapy.srp(broadcast_arp_request,
         timeout=TIMEOUT, verbose = False)[ANSWRD_LST_INDEX]
         
-    clients_list = []                             #List of Clients
+    clients_list = []                             # List of Clients
 
     for client in answered_list:
-        client_dict = {"ip_addr":client[ARP_FRAME_INDEX].psrc,
-                        "mac_addr":client[ARP_FRAME_INDEX].hwsrc}
+        ip_addr = client[ARP_FRAME_INDEX].psrc    # Ip Address
+        mac_addr = client[ARP_FRAME_INDEX].hwsrc  # MAC Address
+        vendor = get_vendor(mac_addr)             # Vendor
+
+        client_dict = {"ip_addr":ip_addr,
+                       "mac_addr":mac_addr,
+                       "vendor":vendor}
+        
         clients_list.append(client_dict)
         
     return clients_list
-##############################################################################
-
-
-# Get Vendor Function
-# This Method Takes Mac Address as Argument
-# Returns Vendor of Mac Address
-##############################################################################
-def get_vendor(mac_addr):
-    url =  MAC_VEND_URL + str(mac_addr)
-
-    payload={}                                        # Payloads
-    headers = {}                                      # Headers
-
-    response = requests.request("GET", url, 
-            headers=headers, data=payload)
-
-    status_code = response.status_code                # Status Code of Request
-
-    if status_code == OK_STATUS_CODE:
-        vendor = response.text
-        print(vendor)
-        return str(vendor)
 ##############################################################################
 
 

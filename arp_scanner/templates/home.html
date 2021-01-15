@@ -34,17 +34,6 @@
 
 {% block scripts %}
 <script type="text/javascript">
-    function getVendor(mac_addr){
-        var port = "{{ port | safe }}";
-        var url = "http://localhost:"+port+"/vendor";
-        return $.ajax({
-            url: url,
-            type: 'GET',
-            data: "mac_addr="+mac_addr,
-            cache: true,
-        });
-    } 
-
     function arpScan(){
         var target = encodeURIComponent($('#target').val());
         var port = "{{ port | safe }}";
@@ -60,10 +49,8 @@
                 for (element in response){
                     var ip_addr = response[element]["ip_addr"];
                     var mac_addr = response[element]["mac_addr"];
-                    var vendor = "";
-                    getVendor(mac_addr).then(function(data){
-                        vendor = String(data);
-                    });
+                    var vendor = response[element]["vendor"];
+
                     $('#resultsTable tbody')
                     .append(("<tr></tr>"))
                     .append($("<td></td>").text(num))
