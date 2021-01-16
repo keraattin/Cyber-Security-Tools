@@ -31,6 +31,7 @@ IP_PATTERN = ("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
               "\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
               "\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
               "\/([1-9]|[1][0-9]|[2][0-9]|[3][0-2])$")
+MAC_PATTRN = ("^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$")
 
 
 TARGET_NOT_VALID_MSG = ("Target not sent correctly..."
@@ -44,6 +45,17 @@ PARAMS_NOT_SEND_MSG = ("Parameters not sent correctly..."
 ##############################################################################
 def validate_target(target):
     matches = re.search(IP_PATTERN,target)
+    if matches:
+        return True
+    else:
+        return False
+##############################################################################
+
+
+# Validate Target Mac Address
+##############################################################################
+def validate_mac_addr(mac_addr):
+    matches = re.search(MAC_PATTRN,mac_addr)
     if matches:
         return True
     else:
@@ -131,6 +143,11 @@ class Vendor(Resource):
         # Arguments Validation
         if not args or len(args)>MAC_PARAMS_COUNT:
             raise BadRequest(PARAMS_NOT_SEND_MSG)
+
+        mac_addr = str(args['mac_addr'])               # MAC Address
+        # Target Validation
+        if not validate_mac_addr(mac_addr):
+            raise BadRequest(TARGET_NOT_VALID_MSG)
 
         mac_addr = str(args['mac_addr'])              # Mac Address
 
