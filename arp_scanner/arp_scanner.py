@@ -49,9 +49,9 @@ PARAMS_NOT_SEND_MSG = ("Parameters not sent correctly..."
 
 # Validate Target IP Address
 ##############################################################################
-def validate_target(target):
-    ip_matches = re.search(IP_PATTERN,target)
-    ip_subnet_matches = re.search(IP_SUBNET_PATTERN,target)
+def validate_ip_addr(ip_addr):
+    ip_matches = re.search(IP_PATTERN,ip_addr)
+    ip_subnet_matches = re.search(IP_SUBNET_PATTERN,ip_addr)
     if ip_matches or ip_subnet_matches:
         return True
     else:
@@ -137,7 +137,7 @@ class ArpScan(Resource):
 
         target = str(args['target'])                  # Targets
         # Target Validation
-        if not validate_target(target):
+        if not validate_ip_addr(target):
             raise BadRequest(TARGET_NOT_VALID_MSG)
 
         clients_list = arp_scan(target)               # Arp Scan Function
