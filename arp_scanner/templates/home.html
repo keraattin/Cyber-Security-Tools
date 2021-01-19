@@ -34,6 +34,16 @@
 
 {% block scripts %}
 <script type="text/javascript">
+    var input = document.getElementById("target");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+       event.preventDefault();
+       document.getElementById("searchButton").click();
+      }
+    });
+</script>
+
+<script type="text/javascript">
     function arpScan(){
         var target = encodeURIComponent($('#target').val());
         var port = "{{ port | safe }}";
