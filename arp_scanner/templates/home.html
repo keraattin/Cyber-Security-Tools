@@ -13,7 +13,6 @@
             <span class="input-group-text" id="basic-addon3">Target</span>
         </div>
         <input type="text" class="form-control" id="target" placeholder="E.g 10.0.2.1 or 10.0.2.1/24">&nbsp;
-        <button type="button" class="btn btn-dark" onclick="arpScan()" id="searchButton">Search</button>
     </div>
     </hr>
     <table class="table table-hover" id="resultsTable">
@@ -33,16 +32,6 @@
 
 
 {% block scripts %}
-<script type="text/javascript">
-    var input = document.getElementById("target");
-    input.addEventListener("keyup", function(event) {
-      if (event.keyCode === 13) {
-       event.preventDefault();
-       document.getElementById("searchButton").click();
-      }
-    });
-</script>
-
 <script type="text/javascript">
     function arpScan(){
         var target = encodeURIComponent($('#target').val());
@@ -72,5 +61,16 @@
             }
         });
     } 
+</script>
+
+<script type="text/javascript">
+    var input = document.getElementById("target");
+    var enter_key_code = 13;
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === enter_key_code) {
+       event.preventDefault();
+       arpScan();
+      }
+    });
 </script>
 {% endblock %}
