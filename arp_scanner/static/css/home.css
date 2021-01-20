@@ -1,3 +1,7 @@
 .container{
     margin-top: 2rem;
 }
+
+#resultsTable{
+    visibility: hidden;
+}

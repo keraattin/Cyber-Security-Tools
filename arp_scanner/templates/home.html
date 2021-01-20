@@ -3,6 +3,7 @@
 
 {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
 {% endblock %}
 
 
@@ -15,6 +16,7 @@
         <input type="text" class="form-control" id="target" placeholder="E.g 10.0.2.1 or 10.0.2.1/24">&nbsp;
     </div>
     </hr>
+    <div class="loader" id="loader"><div></div><div></div><div></div></div>
     <table class="table table-hover" id="resultsTable">
         <thead>
           <tr>
@@ -26,7 +28,7 @@
         </thead>
         <tbody id="resultsTbody">
         </tbody>
-      </table>
+    </table>
 </div>
 {% endblock %}
 
@@ -43,6 +45,10 @@
             data: "target="+target,
             dataType : 'json',
             success: function(response) {
+                /* Closing the Loader and Opening the Table*/
+                $("#loader").css("visibility", "hidden");
+                $("#resultsTable").css("visibility", "visible");
+
                 $("#resultsTbody").empty(); //Clear Table
                 var num = 0;
                 for (element in response){
@@ -58,10 +64,16 @@
                     .append($("<td></td>").text(vendor))
                     num = num + 1; //Increment Index
                 }
+            },
+            error: function(){
+                /* Closing the Loader and the Table*/
+                $("#loader").css("visibility", "hidden");
+                $("#resultsTable").css("visibility", "hidden");
             }
         });
     } 
 </script>
+
 
 <script type="text/javascript">
     var input = document.getElementById("target");
@@ -69,6 +81,11 @@
     input.addEventListener("keyup", function(event) {
       if (event.keyCode === enter_key_code) {
        event.preventDefault();
+        
+       /* Closing the Table and Opening the Loader */
+       $("#resultsTable").css("visibility", "hidden");
+       $("#loader").css("visibility", "visible");
+
        arpScan();
       }
     });
