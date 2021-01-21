@@ -80,8 +80,11 @@ def get_vendor(mac_addr):
     payload={}                                        # Payloads
     headers = {}                                      # Headers
 
-    response = requests.request("GET", url, 
-            headers=headers, data=payload, timeout=TIMEOUT)
+    try:
+        response = requests.request("GET", url, 
+                headers=headers, data=payload, timeout=TIMEOUT)
+    except:
+        return ""
 
     status_code = response.status_code                # Status Code of Request
 
