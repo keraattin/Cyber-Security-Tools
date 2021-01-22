@@ -184,8 +184,8 @@ def page_not_found(e):
 
 # Endpoints
 ##############################################################################
-api.add_resource(ArpScan, '/arp_scan')
-api.add_resource(Vendor, '/vendor')
+api.add_resource(ArpScan, '/api/arp_scan')
+api.add_resource(Vendor, '/api/vendor')
 ##############################################################################
 
 
