@@ -6,7 +6,7 @@ from flask_restful import Resource, Api, abort, reqparse
 from werkzeug.exceptions import BadRequest
 import scapy.all as scapy
 import time
-
+import uuid
 
 # Gloabal Variables
 ##############################################################################
@@ -111,6 +111,14 @@ def send_spoof_packages():
 ##############################################################################
 
 
+# Endpoints
+##############################################################################
+api.add_resource(ArpSpoof, '/api/arp_spoof')
+##############################################################################
+
+
+# Main
+##############################################################################
 if __name__ == '__main__':
     try:
         app.run(debug=DEBUG,port=PORT)
@@ -125,3 +133,4 @@ if __name__ == '__main__':
         '''
         print("[+] Done!")
         print("[-] Quiting...")
+##############################################################################
