@@ -115,13 +115,6 @@ def send_spoof_packages():
                     # Send Packet to the Router to Say I am the Victim
                     redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,interceptor)
 
-                    print("\n\n########################################################################")
-                    print("target_ip_addr : "+str(target_ip_addr))
-                    print("target_mac_addr: "+str(target_mac_addr))
-                    print("router_ip_addr : "+str(router_ip_addr))
-                    print("router_mac_addr: "+str(router_mac_addr))
-                    print("interceptor    : "+str(interceptor))
-                    print("########################################################################")
                 time.sleep(SLEEP_TIME)
     thread = threading.Thread(target=run)
     thread.daemon = DAEMON_THREAD
