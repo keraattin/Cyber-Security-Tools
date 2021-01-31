@@ -9,16 +9,22 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-md-4 section" id="targets-div">
+        <div class="col-md-2 section" id="targets-div">
 
         </div>
-        <div class="col-md-4" id="interceptor-div">
+        <div class="col-md-2" id="targets-arrow-div">
+            
+        </div>
+        <div class="col-md-2" id="interceptor-div">
             <div class="asset">
                 <i class="fa fa-desktop mid-icon"></i>
                 <div id="interceptor-mac"></div>
             </div>
         </div>
-        <div class="col-md-4" id="router-div">
+        <div class="col-md-2" id="targets-arrow-div">
+            
+        </div>
+        <div class="col-md-2" id="router-div">
             <div class="asset">
                 <i class="fa fa-globe mid-icon"></i>
                 <div id="router-ip"></div>
@@ -65,6 +71,33 @@
                     assetDiv.appendChild(breakLine2);
                     assetDiv.appendChild(targetMacAddrText);
                     targetsDiv.appendChild(assetDiv);
+
+                    const targetsArrowDivs  = document.querySelectorAll("[id='targets-arrow-div']");
+                    
+                    for(var i=0; i < targetsArrowDivs.length; i++)
+                    {
+                        
+                        const arrowXDiv         = document.createElement("div");
+                        arrowXDiv.className     = "arrow mid-icon";
+
+                        const arrowDivOne       = document.createElement("i");
+                        arrowDivOne.className   = "fa fa-angle-double-right";
+                        arrowDivOne.id          = "arrowDivOne";
+
+                        const arrowDivTwo       = document.createElement("i");
+                        arrowDivTwo.className   = "fa fa-angle-double-right";
+                        arrowDivTwo.id          = "arrowDivTwo";
+
+                        const arrowDivThree     = document.createElement("i");
+                        arrowDivThree.className = "fa fa-angle-double-right";
+                        arrowDivThree.id        = "arrowDivThree";
+
+                        arrowXDiv.appendChild(arrowDivOne);
+                        arrowXDiv.appendChild(arrowDivTwo);
+                        arrowXDiv.appendChild(arrowDivThree);
+                        targetsArrowDivs[i].appendChild(arrowXDiv);
+                    }
+                    
 
                     $('#interceptor-div #interceptor-mac').text(interceptor);
                     $('#router-div #router-ip').text(router_ip_addr);
