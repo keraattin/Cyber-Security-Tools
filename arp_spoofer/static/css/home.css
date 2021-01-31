@@ -1,0 +1,19 @@
+.mid-icon{
+    font-size: 4rem;
+}
+
+.poisoned{
+    color:#ac51cc;
+}
+
+
+.asset{
+    width: 12rem;
+    height: 8rem;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    font-family: Helvetica, sans-serif;
+    font-weight: 500;
+    margin-top: 2rem;
+}

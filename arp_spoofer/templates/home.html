@@ -1,16 +1,29 @@
 {% extends 'layout.html' %}
 
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-md-4" id="targets-div">
+        <div class="col-md-4 section" id="targets-div">
+
         </div>
-        <div class="col-md-4">
-            <i class="fa fa-desktop"></i>
+        <div class="col-md-4" id="interceptor-div">
+            <div class="asset">
+                <i class="fa fa-desktop mid-icon"></i>
+                <div id="interceptor-mac"></div>
+            </div>
         </div>
-        <div class="col-md-4">
-            <i class="fa fa-satellite-dish"></i>
+        <div class="col-md-4" id="router-div">
+            <div class="asset">
+                <i class="fa fa-globe mid-icon"></i>
+                <div id="router-ip"></div>
+                <div id="router-mac"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -28,7 +41,7 @@
             dataType : 'json',
             success: function(response) {
                 //$("#resultsTbody").empty(); //Clear Table
-                var num = 0;
+
                 for (element in response){
                     var target_ip_addr  = response[element]["target_ip_addr"];
                     var target_mac_addr = response[element]["target_mac_addr"];
@@ -36,17 +49,26 @@
                     var router_mac_addr = response[element]["router_mac_addr"];
                     var interceptor     = response[element]["interceptor"];
                     
+                    const assetDiv          = document.createElement("div");
+                    assetDiv.className      = "asset";
+                    const compIcon          = document.createElement("i");
+                    compIcon.className      = "fa fa-desktop mid-icon poisoned"
+                    const targetIpAddrText  = document.createTextNode(target_ip_addr);
+                    const targetMacAddrText = document.createTextNode(target_mac_addr);
+                    const breakLine         = document.createElement("br");
+                    const breakLine2        = document.createElement("br");
+                    var targetsDiv          = document.getElementById("targets-div");
 
-                    var targ_ip_field   = $("<p></p>").text(target_ip_addr)
-                    var target_mac_field= $("<p></p>").text(target_mac_addr)
+                    assetDiv.appendChild(compIcon);
+                    assetDiv.appendChild(breakLine);
+                    assetDiv.appendChild(targetIpAddrText);
+                    assetDiv.appendChild(breakLine2);
+                    assetDiv.appendChild(targetMacAddrText);
+                    targetsDiv.appendChild(assetDiv);
 
-                    $('#targets-div').append('<div class="row"></div>')
-                    $('#targets-div .row').append('<div class="card" style="width: 12rem;"></div>')
-                    $('#targets-div .row .card').append('<i class="fa fa-desktop"></i>')
-                    $('#targets-div .row .card').append('<div class="card-body"></div>')
-                    $('#targets-div .row .card .card-body').append(targ_ip_field)
-                    $('#targets-div .row .card .card-body').append(target_mac_field)
-                    num = num + 1; //Increment Index
+                    $('#interceptor-div #interceptor-mac').text(interceptor);
+                    $('#router-div #router-ip').text(router_ip_addr);
+                    $('#router-div #router-mac').text(router_mac_addr);
                 }
             }
         });
