@@ -46,7 +46,13 @@
             type: 'GET',
             dataType : 'json',
             success: function(response) {
-                //$("#resultsTbody").empty(); //Clear Table
+                $('#targets-div').html("");
+                var targetsArrowDivs  = document.querySelectorAll("[id='targets-arrow-div']");
+
+                for(var i=0; i < targetsArrowDivs.length; i++)
+                {
+                    targetsArrowDivs[i].innerHTML = "";
+                }
 
                 for (element in response){
                     var target_ip_addr  = response[element]["target_ip_addr"];
@@ -76,7 +82,6 @@
                     
                     for(var i=0; i < targetsArrowDivs.length; i++)
                     {
-                        
                         const arrowXDiv         = document.createElement("div");
                         arrowXDiv.className     = "arrow mid-icon";
 
@@ -111,6 +116,9 @@
 <script type="text/javascript">
     $(document).ready(function(){
         getSpoofedList();
-    })
+        var intervalId = setInterval(function() {
+            getSpoofedList();
+        }, 5000);
+    });
 </script>
 {% endblock %}
