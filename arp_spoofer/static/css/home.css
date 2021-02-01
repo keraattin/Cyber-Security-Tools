@@ -1,5 +1,5 @@
 .mid-icon{
-    font-size: 4rem;
+    font-size: 3rem;
 }
 
 .poisoned{
@@ -26,4 +26,25 @@
     font-family: Helvetica, sans-serif;
     font-weight: 500;
     margin-top: 2.5rem;
+
 }
+
+.arrow #arrowDivOne{
+    animation: flow 0.9s infinite;
+    animation-delay: 0.2s;
+}
+
+.arrow #arrowDivTwo{
+    animation: flow 0.9s infinite;
+    animation-delay: 0.3s;
+}
+
+.arrow #arrowDivThree{
+    animation: flow 0.9s infinite;
+    animation-delay: 0.4s;
+}
+
+@keyframes flow {
+    from{color: #000000;}
+    to{color: #00bd29;}
+  }
