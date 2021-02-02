@@ -3,8 +3,14 @@
 }
 
 .poisoned{
-    color:#ac51cc;
+    color:#000000;
+    animation: poisoning 1.2s infinite;
 }
+
+@keyframes poisoning {
+    from{color: #000000;}
+    to{color: #ac51cc;}
+  }
 
 
 .asset{
