@@ -12,10 +12,10 @@
     to{color: #ac51cc;}
   }
 
-  
-.refresh{
-    float: right;align-items: flex-end;
+.refresh-pane{
+    margin-top: 2rem;
 }
+
 
 .asset{
     width: 12rem;
