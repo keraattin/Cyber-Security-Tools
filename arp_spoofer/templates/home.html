@@ -9,6 +9,20 @@
 {% block body %}
 <div class="container">
     <div class="row">
+        <hr>
+        <span>Refresh Time : &nbsp;&nbsp;</span>
+        <div class="refresh">
+            <select id="refresh_second">
+                <option value="5">5</option>
+                <option value="10" selected="selected">10</option>
+                <option value="15">15</option>
+                <option value="30">30</option>
+                <option value="60">60</option>
+                <option value="120">120</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-2 section" id="targets-div">
 
         </div>
@@ -39,6 +53,7 @@
 {% block scripts %}
 <script type="text/javascript">
     function getSpoofedList(){
+        console.log("called")
         var port = "{{ port | safe }}";
         var url = "http://localhost:"+port+"/api/arp_spoof";
         $.ajax({
@@ -116,10 +131,27 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        getSpoofedList();
-        var intervalId = setInterval(function() {
-            getSpoofedList();
-        }, 5000);
+        getSpoofedList();   //Run First Time
     });
+
+    var interval = $('#refresh_second option:selected').text();
+    var intervalId = setInterval(getSpoofedList,interval); //start initial
+
+    function startInterval(interval) {
+        intervalId = setInterval(function() {
+            getSpoofedList();
+        }, interval);
+    }
+
+    function getInterval() {
+        return interval;
+    }
+
+    $('#refresh_second').on('change',function(){
+        clearInterval(intervalId);
+        startInterval(interval);
+    });
+
 </script>
+
 {% endblock %}

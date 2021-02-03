@@ -12,6 +12,10 @@
     to{color: #ac51cc;}
   }
 
+  
+.refresh{
+    float: right;align-items: flex-end;
+}
 
 .asset{
     width: 12rem;
