@@ -93,6 +93,9 @@ class ArpSpoof(Resource):
                             "interceptor"     : my_mac_addr }
         
         SPOOFED_LIST.append(spoof_dict)
+
+        return spoof_dict, 201                    # Return Success 
+
 ##############################################################################
 
 
