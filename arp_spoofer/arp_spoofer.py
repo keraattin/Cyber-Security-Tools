@@ -40,6 +40,10 @@ arp_spoof_post_args.add_argument("router_mac_addr", type=str,
         help="Router MAC Adress", required=True)
 arp_spoof_post_args.add_argument("my_mac_addr",     type=str, 
         help="My MAC Adress")
+
+arp_spoof_delete_args = reqparse.RequestParser()
+arp_spoof_delete_args.add_argument("target_ip_addr",type=str, 
+        help="Target Ip Adress",  required=True)
 ##############################################################################
 
 
@@ -96,6 +100,18 @@ class ArpSpoof(Resource):
 
         return spoof_dict, 201                    # Return Success 
 
+    def delete(self):
+        args = arp_spoof_delete_args.parse_args() # Arguments
+
+        target_ip_addr  = args['target_ip_addr']
+
+        global SPOOFED_LIST
+        for spoofed in SPOOFED_LIST:
+            spoofed_target_ip_addr  = spoofed['target_ip_addr']
+            if target_ip_addr == spoofed_target_ip_addr:
+                SPOOFED_LIST.remove(spoofed)
+                return {"message":"Deleted"},200
+        return {"message":"Not Found"},200
 ##############################################################################
 
 
