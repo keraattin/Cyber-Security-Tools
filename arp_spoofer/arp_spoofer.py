@@ -186,17 +186,6 @@ if __name__ == '__main__':
                         router_mac_addr,RESTORE_PKG_COUNT)
                 redirect_arp(router_ip_addr,router_mac_addr,target_ip_addr,
                         target_mac_addr,RESTORE_PKG_COUNT)
-                
-                print("Removing....")
-                print("Removing....")
-                print("Removing....")
-                print("##########################################")
-                print("target_ip_addr : "+str(target_ip_addr))
-                print("target_mac_addr: "+str(target_mac_addr))
-                print("router_ip_addr : "+str(router_ip_addr))
-                print("router_mac_addr: "+str(router_mac_addr))
-                print("interceptor    : "+str(interceptor))
-                print("##########################################")
         
         print("[+] Done!")
         print("[-] Quiting...")
