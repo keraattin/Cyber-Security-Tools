@@ -4,36 +4,41 @@
 # Imports
 ##############################################################################
 import subprocess
-##############################################################################
-
-
-# Global Values
-##############################################################################
-IFACE       = "eth0"
-NEW_MAC     = "00:11:22:33:44:55"
+import argparse
 ##############################################################################
 
 
 # Functions
 ##############################################################################
-def change_mac_addr():
+def change_mac_addr(iface,new_mac):
     # Down Interface
-    subprocess.call(['ifconfig','{}'.format(IFACE),'down'])
+    subprocess.call(['ifconfig','{}'.format(iface),'down'])
 
     # Change Hw Adress
     subprocess.call(['ifconfig',
-                    '{}'.format(IFACE),
+                    '{}'.format(iface),
                     'hw',
                     'ether',
-                    '{}'.format(NEW_MAC)])
+                    '{}'.format(new_mac)])
     
     # Up Interface
-    subprocess.call(['ifconfig','{}'.format(IFACE),'up'])
+    subprocess.call(['ifconfig','{}'.format(iface),'up'])
 ##############################################################################
 
 
 # Main
 ##############################################################################
 if __name__ == '__main__':
-    change_mac_addr()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i',
+                        '--interface', 
+                        dest = 'iface', 
+                        help = 'Interface')
+    parser.add_argument('-m',
+                        '--mac', 
+                        dest = 'new_mac', 
+                        help = 'New MAC Address')
+    args = parser.parse_args()
+    
+    change_mac_addr(args.iface,args.new_mac)
 ##############################################################################
