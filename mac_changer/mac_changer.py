@@ -39,6 +39,8 @@ if __name__ == '__main__':
                         dest = 'new_mac', 
                         help = 'New MAC Address')
     args = parser.parse_args()
-    
+
     change_mac_addr(args.iface,args.new_mac)
+
+    print("[+] Your MAC Address Changed To : {}\n".format(args.new_mac))
 ##############################################################################
