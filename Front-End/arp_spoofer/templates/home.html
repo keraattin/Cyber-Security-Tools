@@ -1,0 +1,156 @@
+{% extends 'layout.html' %}
+
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="row refresh-pane">
+        <div class="col-md-4"></div>
+        <div class="col-md-5"></div>
+        <div class="col-md-3">
+            <div class="refresh">
+                <span>Refresh Time : &nbsp;&nbsp;</span>
+                <select id="refresh_second">
+                    <option value="5000">5 Sec</option>
+                    <option value="10000">10 Sec</option>
+                    <option value="15000" selected="selected">15 Sec</option>
+                    <option value="30000">30 Sec</option>
+                    <option value="60000">60 Sec</option>
+                    <option value="120000">120 Sec</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-2 section" id="targets-div">
+
+        </div>
+        <div class="col-md-2" id="targets-arrow-div">
+            
+        </div>
+        <div class="col-md-2" id="interceptor-div">
+            <div class="asset">
+                <i class="fa fa-desktop mid-icon"></i>
+                <div id="interceptor-mac"></div>
+            </div>
+        </div>
+        <div class="col-md-2" id="targets-arrow-div">
+            
+        </div>
+        <div class="col-md-2" id="router-div">
+            <div class="asset">
+                <i class="fa fa-globe mid-icon"></i>
+                <div id="router-ip"></div>
+                <div id="router-mac"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+    function getSpoofedList(){
+        var port = "{{ port | safe }}";
+        var url = "http://localhost:"+port+"/api/arp_spoof";
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType : 'json',
+            success: function(response) {
+                $('#targets-div').html("");
+                var targetsArrowDivs  = document.querySelectorAll("[id='targets-arrow-div']");
+
+                for(var i=0; i < targetsArrowDivs.length; i++)
+                {
+                    targetsArrowDivs[i].innerHTML = "";
+                }
+
+                for (element in response){
+                    var target_ip_addr  = response[element]["target_ip_addr"];
+                    var target_mac_addr = response[element]["target_mac_addr"];
+                    var router_ip_addr  = response[element]["router_ip_addr"];
+                    var router_mac_addr = response[element]["router_mac_addr"];
+                    var interceptor     = response[element]["interceptor"];
+                    
+                    const assetDiv          = document.createElement("div");
+                    assetDiv.className      = "asset";
+                    const compIcon          = document.createElement("i");
+                    compIcon.className      = "fa fa-desktop mid-icon poisoned"
+                    const targetIpAddrText  = document.createTextNode(target_ip_addr);
+                    const targetMacAddrText = document.createTextNode(target_mac_addr);
+                    const breakLine         = document.createElement("br");
+                    const breakLine2        = document.createElement("br");
+                    var targetsDiv          = document.getElementById("targets-div");
+
+                    assetDiv.appendChild(compIcon);
+                    assetDiv.appendChild(breakLine);
+                    assetDiv.appendChild(targetIpAddrText);
+                    assetDiv.appendChild(breakLine2);
+                    assetDiv.appendChild(targetMacAddrText);
+                    targetsDiv.appendChild(assetDiv);
+
+                    const targetsArrowDivs  = document.querySelectorAll("[id='targets-arrow-div']");
+
+                    for(var i=0; i < targetsArrowDivs.length; i++)
+                    {
+                        const arrowXDiv         = document.createElement("div");
+                        arrowXDiv.className     = "arrow mid-icon";
+
+                        const arrowDivOne       = document.createElement("i");
+                        arrowDivOne.className   = "fa fa-angle-double-right";
+                        arrowDivOne.id          = "arrowDivOne";
+
+                        const arrowDivTwo       = document.createElement("i");
+                        arrowDivTwo.className   = "fa fa-angle-double-right";
+                        arrowDivTwo.id          = "arrowDivTwo";
+
+                        const arrowDivThree     = document.createElement("i");
+                        arrowDivThree.className = "fa fa-angle-double-right";
+                        arrowDivThree.id        = "arrowDivThree";
+
+                        arrowXDiv.appendChild(arrowDivOne);
+                        arrowXDiv.appendChild(arrowDivTwo);
+                        arrowXDiv.appendChild(arrowDivThree);
+                        targetsArrowDivs[i].appendChild(arrowXDiv);
+                    }
+                    
+
+                    $('#interceptor-div #interceptor-mac').text(interceptor);
+                    $('#router-div #router-ip').text(router_ip_addr);
+                    $('#router-div #router-mac').text(router_mac_addr);
+                }
+            }
+        });
+    } 
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        getSpoofedList();   //Run First Time
+    });
+
+    var interval = $('#refresh_second').val();
+    var intervalId = setInterval(getSpoofedList,interval); //start initial
+
+    function startInterval(interval) {
+        intervalId = setInterval(function() {
+            getSpoofedList();
+        }, interval);
+    }
+
+    $('#refresh_second').on('change',function(){
+        var interval = $('#refresh_second').val();
+        clearInterval(intervalId);
+        startInterval(interval);
+    });
+</script>
+
+{% endblock %}

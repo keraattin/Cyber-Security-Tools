@@ -1,0 +1,60 @@
+.mid-icon{
+    font-size: 3rem;
+}
+
+.poisoned{
+    color:#000000;
+    animation: poisoning 1.2s infinite;
+}
+
+@keyframes poisoning {
+    from{color: #000000;}
+    to{color: #ac51cc;}
+  }
+
+.refresh-pane{
+    margin-top: 2rem;
+}
+
+
+.asset{
+    width: 12rem;
+    height: 8rem;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    font-family: Helvetica, sans-serif;
+    font-weight: 500;
+    margin-top: 2rem;
+}
+
+.arrow{
+    padding: 0.5rem 1rem;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    font-family: Helvetica, sans-serif;
+    font-weight: 500;
+    margin-top: 2.5rem;
+
+}
+
+.arrow #arrowDivOne{
+    animation: flow 0.9s infinite;
+    animation-delay: 0.2s;
+}
+
+.arrow #arrowDivTwo{
+    animation: flow 0.9s infinite;
+    animation-delay: 0.3s;
+}
+
+.arrow #arrowDivThree{
+    animation: flow 0.9s infinite;
+    animation-delay: 0.4s;
+}
+
+@keyframes flow {
+    from{color: #000000;}
+    to{color: #00bd29;}
+  }
