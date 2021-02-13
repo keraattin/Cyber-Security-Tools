@@ -1,2 +1,0 @@
-scapy
-scapy_http
