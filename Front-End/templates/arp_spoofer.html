@@ -2,7 +2,7 @@
 
 
 {% block style %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/arp_spoofer.css') }}">
 {% endblock %}
 
 
@@ -58,7 +58,7 @@
 <script type="text/javascript">
     function getSpoofedList(){
         var port = "{{ port | safe }}";
-        var url = "http://localhost:"+port+"/api/arp_spoof";
+        var url = api_url;
         $.ajax({
             url: url,
             type: 'GET',

@@ -2,7 +2,7 @@
 
 
 {% block style %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/arp_scanner.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
 {% endblock %}
 
@@ -38,7 +38,7 @@
     function arpScan(){
         var target = encodeURIComponent($('#target').val());
         var port = "{{ port | safe }}";
-        var url = "http://localhost:"+port+"/api/arp_scan";
+        var url = api_url;
         $.ajax({
             url: url,
             type: 'GET',
