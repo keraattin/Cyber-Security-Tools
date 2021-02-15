@@ -5,23 +5,18 @@
 ##############################################################################
 from flask import Flask, request, abort, jsonify, render_template
 from flask_restful import Resource, Api, abort, reqparse
+from werkzeug.exceptions import BadRequest
 import subprocess
 
 from args import mac_changer_post_args
+from validators import validate_mac_addr
 ##############################################################################
 
 
-# Gloabal Variables
+# Global Values
 ##############################################################################
-DEBUG               = True                        # Debug Mode
-PORT                = 5000                        # Port Number
-
-app                 = Flask(__name__)
-api                 = Api(app)
+NOT_VALID_MAC_ADDR_MSG = "Not a Valid MAC Address"
 ##############################################################################
-
-
-
 
 
 # Functions
@@ -51,6 +46,10 @@ class MacChanger(Resource):
         iface    = args['iface']
         mac_addr = args['mac_addr']
 
+        # If MAC Address not Valid
+        if not validate_mac_addr(mac_addr):
+            raise BadRequest(NOT_VALID_MAC_ADDR_MSG)
+
         change_mac_addr(iface,mac_addr)
 
         return {"message":
@@ -60,7 +59,7 @@ class MacChanger(Resource):
 
 # Endpoints
 ##############################################################################
-api.add_resource(MacChanger, '/api/mac_changer')
+
 ##############################################################################
 
 
