@@ -11,6 +11,7 @@ import requests
 
 from args import arp_scanner_get_args
 from validators import validate_ip_addr
+from schema import ArpScannerGetSchema
 ##############################################################################
 
 
