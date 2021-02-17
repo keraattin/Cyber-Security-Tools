@@ -8,8 +8,8 @@ from flask_restful import Resource, Api, abort, reqparse
 from werkzeug.exceptions import BadRequest
 import subprocess
 
-from args import mac_changer_post_args
-from validators import validate_mac_addr
+from .args import mac_changer_post_args
+from .validators import validate_mac_addr
 ##############################################################################
 
 

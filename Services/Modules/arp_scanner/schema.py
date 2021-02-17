@@ -4,7 +4,7 @@
 # Imports
 ##############################################################################
 from marshmallow import Schema, fields, validate
-from validators import validate_ip_addr
+from .validators import validate_ip_addr
 ##############################################################################
 
 

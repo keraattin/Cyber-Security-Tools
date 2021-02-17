@@ -11,7 +11,7 @@ import time
 import uuid
 import threading
 
-from args import arp_spoof_post_args,arp_spoof_delete_args
+from .args import arp_spoof_post_args,arp_spoof_delete_args
 ##############################################################################
 
 
