@@ -11,7 +11,7 @@ import time
 import uuid
 import threading
 
-from .args import arp_spoof_post_args,arp_spoof_delete_args
+from .schema import ArpSpooferPostSchema, ArpSpooferDeleteSchema
 ##############################################################################
 
 
@@ -56,15 +56,22 @@ class ArpSpoof(Resource):
         return SPOOFED_LIST
     
     def post(self):
-        args = arp_spoof_post_args.parse_args()   # Arguments
+        arp_spoofer_post_schema = ArpSpooferPostSchema()      # Schema Object
 
-        target_ip_addr  = args['target_ip_addr']
-        target_mac_addr = args['target_mac_addr']
-        router_ip_addr  = args['router_ip_addr']
-        router_mac_addr = args['router_mac_addr']
+        data = request.get_json()                             # Getting Data
 
-        if args['my_mac_addr']:
-            my_mac_addr = args['my_mac_addr']
+        # Validating Request Parameters
+        errors = arp_spoofer_post_schema.validate(data)
+        if errors:
+            raise BadRequest(errors)
+
+        target_ip_addr  = data['target_ip_addr']
+        target_mac_addr = data['target_mac_addr']
+        router_ip_addr  = data['router_ip_addr']
+        router_mac_addr = data['router_mac_addr']
+
+        if data['my_mac_addr']:
+            my_mac_addr = data['my_mac_addr']
         else:
             my_mac_addr = get_my_mac_addr()
 
@@ -79,16 +86,23 @@ class ArpSpoof(Resource):
         return spoof_dict, 201                    # Return Success 
 
     def delete(self):
-        args = arp_spoof_delete_args.parse_args() # Arguments
+        arp_spoofer_delete_schema = ArpSpooferDeleteSchema()  # Schema Object
 
-        target_ip_addr  = args['target_ip_addr']
+        data = request.get_json()                             # Getting Data
+
+        # Validating Request Parameters
+        errors = arp_spoofer_delete_schema.validate(data)
+        if errors:
+            raise BadRequest(errors)
+
+        target_ip_addr  = data['target_ip_addr']
 
         global SPOOFED_LIST
         for spoofed in SPOOFED_LIST:
             spoofed_target_ip_addr  = spoofed['target_ip_addr']
             if target_ip_addr == spoofed_target_ip_addr:
                 SPOOFED_LIST.remove(spoofed)
-                return {"message":"Deleted"},200
+                return {"message":"Deleted from Spoofed Clients List"},200
         return {"message":"Not Found"},200
 ##############################################################################
 
