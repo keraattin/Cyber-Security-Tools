@@ -8,14 +8,8 @@ from flask_restful import Resource, Api, abort, reqparse
 from werkzeug.exceptions import BadRequest
 import subprocess
 
-from .args import mac_changer_post_args
+from .schema import MacChangerPostSchema
 from .validators import validate_mac_addr
-##############################################################################
-
-
-# Global Values
-##############################################################################
-NOT_VALID_MAC_ADDR_MSG = "Not a Valid MAC Address"
 ##############################################################################
 
 
@@ -41,30 +35,20 @@ def change_mac_addr(iface,mac_addr):
 ##############################################################################
 class MacChanger(Resource):
     def post(self):
-        args = mac_changer_post_args.parse_args()   # Arguments
-        
-        iface    = args['iface']
-        mac_addr = args['mac_addr']
+        mac_changer_post_schema = MacChangerPostSchema()   # Schema Object
 
-        # If MAC Address not Valid
-        if not validate_mac_addr(mac_addr):
-            raise BadRequest(NOT_VALID_MAC_ADDR_MSG)
+        data = request.get_json()                          # Getting Data
+
+        # Validating Request Parameters
+        errors = mac_changer_post_schema.validate(data)
+        if errors:
+            raise BadRequest(errors)
+        
+        iface    = data['iface']
+        mac_addr = data['mac_addr']
 
         change_mac_addr(iface,mac_addr)
 
         return {"message":
                 "Your MAC Address Changed to {}".format(mac_addr)},201
-##############################################################################
-
-
-# Endpoints
-##############################################################################
-
-##############################################################################
-
-
-# Main
-##############################################################################
-if __name__ == '__main__':
-    app.run(debug=DEBUG,port=PORT)
 ##############################################################################
